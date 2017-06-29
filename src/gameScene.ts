@@ -1,25 +1,24 @@
 import {Scene} from './scene';
-import {Character} from './character';
+import {Character} from './contents/character';
+import {Enemy} from "./contents/enemy";
+import {FireI} from "./contents/fireI";
 /**
  * Created by CA on 2017-06-29.
  */
 
 export class GameScene extends Scene {
+    private character:Character = new Character();
+    private enemy:Enemy = new Enemy();
+
     constructor() {
         super();
 
-        this.children.push(new Character());
+        this.children.push(this.character);
+        this.children.push(this.enemy);
+        this.children.push(new FireI(this.character, this.enemy));
     }
 
     render(ctx:CanvasRenderingContext2D): void {
         super.render(ctx);
-
-        ctx.save();
-        ctx.fillStyle = "blue";
-        ctx.font = "bold 40px verdana sans-serif";
-        ctx.fillText('Hello Canvas', 100, 100);
-        ctx.font = "20px sans-serif";
-        ctx.fillText(this.elapsed + '', 0, 20);
-        ctx.restore();
     }
 }

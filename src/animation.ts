@@ -3,14 +3,14 @@ import {SpriteSheet} from './spriteSheet';
  * Created by CA on 2017-06-29.
  */
 
-class Animation {
+export class Animation {
     private elapsed: number = 0;
     private curFrame: number = 0;
     private done: boolean = false;
     private duration: number = 0;
     private loop : boolean = false;
 
-    constructor(private sprites: SpriteSheet, private frames: any[], opt: any) {
+    constructor(private sprites: SpriteSheet, private frames: any[], opt?: any) {
         this.duration = this.frames.reduce((p: number, v: any) => {
             return p + v.duration;
         }, 0); // 각 프레임의 시간의 합
@@ -65,7 +65,7 @@ class Animation {
         }
     }
 
-    draw(ctx:CanvasRenderingContext2D, x:number, y:number, opt:any) {
+    draw(ctx:CanvasRenderingContext2D, x:number, y:number, opt?:any) {
         this.sprites.get(this.frames[this.curFrame].frame).draw(ctx, x, y, opt);
     }
 }
