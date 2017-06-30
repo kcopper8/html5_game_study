@@ -17,8 +17,13 @@ export class FireI implements GameObject {
         x: number,
         y: number
     } = {x: 0, y: 0};
+    public end: boolean = false;
 
     update(timeDelta: number): void {
+        if (this.end) {
+            return;
+        }
+
         this.force.x += (10 * timeDelta);
         this.force.y += (10 * timeDelta);
 
@@ -32,6 +37,10 @@ export class FireI implements GameObject {
             this.y = Math.min(this.enemy.y, this.y + this.force.y);
         } else if(this.enemy.y < this.x) {
             this.y = Math.max(this.enemy.y, this.y - this.force.y);
+        }
+
+        if (this.x === this.enemy.x && this.y === this.enemy.y) {
+            this.end = true;
         }
     }
 
