@@ -18,9 +18,25 @@ export class FireI implements GameObject {
         y: number
     } = {x: 0, y: 0};
     public end: boolean = false;
+    /**
+     * @type {string}
+     */
+    private state: 'throw' | 'explosion' = "throw";
+    private explosionTime: number = 0;
+
 
     update(timeDelta: number): void {
         if (this.end) {
+            return;
+        }
+
+        if (this.state === 'explosion') {
+            if (this.explosionTime > 0.1) {
+                this.end = true;
+                return;
+            }
+
+            this.explosionTime += timeDelta;
             return;
         }
 
@@ -29,18 +45,18 @@ export class FireI implements GameObject {
 
         if (this.enemy.x > this.x) {
             this.x = Math.min(this.enemy.x, this.x + this.force.x);
-        } else if(this.enemy.x < this.x) {
+        } else if (this.enemy.x < this.x) {
             this.x = Math.max(this.enemy.x, this.x - this.force.x);
         }
 
         if (this.enemy.y > this.y) {
             this.y = Math.min(this.enemy.y, this.y + this.force.y);
-        } else if(this.enemy.y < this.x) {
+        } else if (this.enemy.y < this.x) {
             this.y = Math.max(this.enemy.y, this.y - this.force.y);
         }
 
         if (this.x === this.enemy.x && this.y === this.enemy.y) {
-            this.end = true;
+            this.state = "explosion";
         }
     }
 
@@ -49,7 +65,11 @@ export class FireI implements GameObject {
         ctx.translate(this.x, this.y);
         ctx.fillStyle = "red";
         ctx.beginPath();
-        ctx.arc(0, 0, 5, 0, 2 * Math.PI); // 각도는 늘 라디안이라는 점을 잊지 말자!
+        if (this.state === 'explosion') {
+            ctx.arc(0, 0, (5 + (this.explosionTime * 500)), 0, 2 * Math.PI); // 각도는 늘 라디안이라는 점을 잊지 말자!
+        } else {
+            ctx.arc(0, 0, 5, 0, 2 * Math.PI); // 각도는 늘 라디안이라는 점을 잊지 말자!
+        }
         ctx.fill();
         ctx.restore();
     }
